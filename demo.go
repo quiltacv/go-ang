@@ -3,6 +3,7 @@ import ("github.com/jinzhu/gorm"
  				_ "github.com/jinzhu/gorm/dialects/postgres"
 				"fmt"
         "strconv"
+        "math/rand"
 				)
 
 type Product struct {
@@ -45,12 +46,15 @@ func main() {
     case 2: db.Where("Name = ?", "LG").First(&category)
     default: db.Where("Name = ?", "SAMSUNG").First(&category)
     }
-		db.Create(&Product{Code: "LA65"+strconv.Itoa(i), Price: 999, CategoryID: category.Model.ID})
+		db.Create(&Product{Code: "LA65"+strconv.Itoa(i), Name: category.Name+ "-"+ strconv.Itoa(i), Price: 999, CategoryID: category.Model.ID})
 		fmt.Println("LA65"+strconv.Itoa(i))
 	}
-  products := Product{}
+  products := []Product{}
   db.Debug().Find(&products)
-  fmt.Println(products)
+  fmt.Println(len(products))
+  for i := 0; i< len(products); i++ {
+    fmt.Println(products[i].Code, "--" ,products[i].Name)
+  }
 
 	fmt.Println("Finished")
 }
