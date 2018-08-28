@@ -4,21 +4,33 @@ import (
         "net/http"
         "io/ioutil"
 				"fmt"
+        "encoding/json"
+        "time"
         // "github.com/jinzhu/gorm"
    			// 	_ "github.com/jinzhu/gorm/dialects/postgres"
 				)
 
-type Garage struct{
-  id int `gorm:"primary_key";"AUTO_INCREMENT"`
-  name string `gorm:"size:255"`
-  address string `gorm:"type:varchar(100)"`
-  description string `gorm:"type:varchar(100)"`
-  phone string `gorm:"type:varchar(20)"`
-}
+  type Garage []struct {
+  	ID          int         `json:"id"`
+  	Name        string      `json:"name"`
+  	Description string      `json:"description"`
+  	Phone       string      `json:"phone"`
+  	Address     string      `json:"address"`
+  	OpenTime    time.Time   `json:"open_time"`
+  	CloseTime   time.Time   `json:"close_time"`
+  	Source      string      `json:"source"`
+  	IsPending   interface{} `json:"is_pending"`
+  	IsDeleted   interface{} `json:"is_deleted"`
+  	CreatedAt   time.Time   `json:"created_at"`
+  	UpdatedAt   time.Time   `json:"updated_at"`
+  	CityID      int         `json:"city_id"`
+  	Longitude   float64     `json:"longitude"`
+  	Latitude    float64     `json:"latitude"`
+  }
 
 
 func main() {
-  var request_url = "http://fixmybike.herokuapp.com//api/v1/garages/find_garages?token=2e900f7419c3d358a28f48cc9ee5803a&name=Waino%20Sipes%20DVM"
+  var request_url = "http://fixmybike.herokuapp.com//api/v1/garages/find_garages?token=2e900f7419c3d358a28f48cc9ee5803a&name=as"
   fmt.Println("Signed URL:", request_url)
   resp, err := http.Get(request_url)
 
@@ -33,8 +45,12 @@ func main() {
     if err != nil {
     		log.Fatal(err)
     	}
-    rep := string(robots)
-    fmt.Println(rep)
+
+    garages := &Garage{}
+
+    json.Unmarshal([]byte(robots), &garages)
+    fmt.Println("===============", garages)
+
   } else {
     fmt.Println("Broken")
   }
