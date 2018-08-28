@@ -30,7 +30,7 @@ import (
 
 
 func main() {
-  var request_url = "http://fixmybike.herokuapp.com//api/v1/garages/find_garages?token=2e900f7419c3d358a28f48cc9ee5803a&name=as"
+  var request_url = "http://fixmybike.herokuapp.com//api/v1/garages/find_garages?token=2e900f7419c3d358a28f48cc9ee5803a&name=a"
   fmt.Println("Signed URL:", request_url)
   resp, err := http.Get(request_url)
 
@@ -45,12 +45,12 @@ func main() {
     if err != nil {
     		log.Fatal(err)
     	}
-
     garages := &Garage{}
-
-    json.Unmarshal([]byte(robots), &garages)
-    fmt.Println("===============", garages)
-
+    json.Unmarshal([]byte(robots), garages)
+    fmt.Println(len(*garages))
+    for i := 0; i < len(*garages); i++ {
+      fmt.Println((*garages)[i])
+    }
   } else {
     fmt.Println("Broken")
   }
